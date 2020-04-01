@@ -73,7 +73,7 @@ namespace Intersect.Server.Entities
 
         public int StatPoints { get; set; }
 
-        [Column("Equipment"), JsonIgnore]
+		[Column("Equipment"), JsonIgnore]
         public string EquipmentJson
         {
             get => DatabaseUtils.SaveIntArray(Equipment, Options.EquipmentSlots.Count);
@@ -5227,11 +5227,11 @@ namespace Intersect.Server.Entities
             }
         }
 
-        //TODO: Clean all of this stuff up
+		//TODO: Clean all of this stuff up
 
-        #region Temporary Values
+		#region Temporary Values
 
-        [NotMapped, JsonIgnore] public bool InGame;
+		[NotMapped, JsonIgnore] public bool InGame;
 
         [NotMapped, JsonIgnore] public Guid LastMapEntered = Guid.Empty;
 
