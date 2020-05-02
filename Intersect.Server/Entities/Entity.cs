@@ -39,7 +39,7 @@ namespace Intersect.Server.Entities
         [NotMapped, JsonIgnore] public Entity Target = null;
 
 
-		[NotMapped, JsonIgnore] public byte Running = 0;
+		[NotMapped, JsonIgnore] public bool Running;
 
 		public Entity() : this(Guid.NewGuid())
         {
@@ -704,7 +704,7 @@ namespace Intersect.Server.Entities
         public virtual float GetMovementTime()
         {
             var time = 1000f / (float) (1 + Math.Log(Stat[(int) Stats.Speed].Value()));
-			if (Running == 1)
+			if (Running)
 			{
 				time *= 0.5f;
 			}

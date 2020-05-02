@@ -6,7 +6,7 @@ namespace Intersect.Network.Packets.Client
     public class MovePacket : CerasPacket
     {
 
-        public MovePacket(Guid mapId, byte x, byte y, byte dir, byte run)
+        public MovePacket(Guid mapId, byte x, byte y, byte dir, bool run)
         {
             MapId = mapId;
             X = x;
@@ -23,7 +23,7 @@ namespace Intersect.Network.Packets.Client
 
 		public byte Dir { get; set; }
 
-		public byte Run { get; set; }
+		public bool Run { get; set; }
 
 	}
 

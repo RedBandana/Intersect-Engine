@@ -803,17 +803,9 @@ namespace Intersect.Client.Entities
                 movex = 1;
             }
 
-			if (Controls.KeyDown(Control.Running))
-			{
-				Running = 1;
-			}
-			else
-			{
-				Running = 0;
-			}
+            Running = Controls.KeyDown(Control.Running);
 
-
-			Globals.Me.MoveDir = -1;
+            Globals.Me.MoveDir = -1;
             if (movex != 0f || movey != 0f)
             {
                 if (movey < 0)
