@@ -58,7 +58,7 @@ namespace Intersect.Client.Entities
         public Guid TargetIndex;
 
         public int TargetType;
-
+		
         public Player(Guid id, PlayerEntityPacket packet) : base(id, packet)
         {
             for (var i = 0; i < Options.MaxHotbar; i++)
@@ -802,6 +802,8 @@ namespace Intersect.Client.Entities
             {
                 movex = 1;
             }
+            
+            Running = Controls.KeyDown(Control.Running);
 
 
             // Used this so I can do multiple switch case
@@ -1960,7 +1962,7 @@ namespace Intersect.Client.Entities
             }
         }
 
-    }
+	}
 
     public class FriendInstance
     {
@@ -1988,5 +1990,7 @@ namespace Intersect.Client.Entities
         }
 
     }
+
+	
 
 }

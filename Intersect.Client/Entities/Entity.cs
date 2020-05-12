@@ -163,7 +163,7 @@ namespace Intersect.Client.Entities
 
         public long LastActionTime = -1;
 
-        public const long TimeBeforeIdling = 4000;
+        public const long TimeBeforeIdling = 200;
 
         public const long IdleFrameDuration = 200;
         #endregion
@@ -183,7 +183,10 @@ namespace Intersect.Client.Entities
 
         public byte Z;
 
-        public Entity(Guid id, EntityPacket packet, bool isEvent = false)
+		// Running System
+		public bool Running;
+
+		public Entity(Guid id, EntityPacket packet, bool isEvent = false)
         {
             Id = id;
             CurrentMap = Guid.Empty;
@@ -450,11 +453,14 @@ namespace Intersect.Client.Entities
         public virtual float GetMovementTime()
         {
             var time = 1000f / (float) (1 + Math.Log(Stat[(int) Stats.Speed]));
-            if (Blocking)
+			if (Running)
+			{
+				time *= 0.5f;
+			}
+			if (Blocking)
             {
                 time += time * (float) Options.BlockingSlow;
             }
-
             return Math.Min(1000f, time);
         }
 
@@ -1748,10 +1754,22 @@ namespace Intersect.Client.Entities
                 return;
             }
 
-            SpriteAnimation = AnimatedTextures[SpriteAnimations.Idle] != null && LastActionTime + TimeBeforeIdling < Globals.System.GetTimeMs() ? SpriteAnimations.Idle : SpriteAnimations.Normal;
+            if (AnimatedTextures[SpriteAnimations.Idle] != null && LastActionTime + TimeBeforeIdling < Globals.System.GetTimeMs())
+            {
+                SpriteAnimation = SpriteAnimations.Idle;
+            }
+
+
             if (IsMoving)
             {
-                SpriteAnimation = SpriteAnimations.Normal;
+                if (Running)
+                {
+                    SpriteAnimation = SpriteAnimations.Run;
+                }
+                else
+                {
+                    SpriteAnimation = SpriteAnimations.Normal;
+                }
                 LastActionTime = Globals.System.GetTimeMs();
             }
             else if (AttackTimer > Globals.System.GetTimeMs()) //Attacking
@@ -1822,12 +1840,13 @@ namespace Intersect.Client.Entities
                 }
                 LastActionTime = Globals.System.GetTimeMs();
             }
-
+            
             if (SpriteAnimation == SpriteAnimations.Normal)
             {
                 ResetSpriteFrame();
             }
-            else if (SpriteAnimation == SpriteAnimations.Idle)
+
+            else if (SpriteAnimation == SpriteAnimations.Idle || SpriteAnimation == SpriteAnimations.Run)
             {
                 if (SpriteFrameTimer + IdleFrameDuration < Globals.System.GetTimeMs())
                 {
