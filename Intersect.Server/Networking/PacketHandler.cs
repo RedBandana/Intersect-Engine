@@ -842,11 +842,11 @@ namespace Intersect.Server.Networking
                     {
                         if (projectileBase.AmmoItemId != Guid.Empty)
                         {
-                            var itemSlot = player.FindItem(
+                            var itemSlot = player.FindInventoryItemSlot(
                                 projectileBase.AmmoItemId, projectileBase.AmmoRequired
                             );
 
-                            if (itemSlot == -1)
+                            if (itemSlot == null)
                             {
                                 PacketSender.SendChatMsg(
                                     player,
@@ -861,7 +861,7 @@ namespace Intersect.Server.Networking
                                     Strings.Get("items", "notenough", $"REGISTERED_AMMO ({projectileBase.Ammo}:'{ItemBase.GetName(projectileBase.Ammo)}':{projectileBase.AmmoRequired})"),
                                     CustomColors.NoAmmo);
 #endif
-                            if (!player.TakeItemsById(projectileBase.AmmoItemId, projectileBase.AmmoRequired))
+                            if (!player.TryTakeItem(projectileBase.AmmoItemId, projectileBase.AmmoRequired))
                             {
 #if INTERSECT_DIAGNOSTIC
                                     PacketSender.SendPlayerMsg(client,
@@ -1151,7 +1151,7 @@ namespace Intersect.Server.Networking
                     if (ItemBase.Get(item.Id) != null)
                     {
                         var tempItem = new Item(item.Id, item.Quantity);
-                        newChar.TryGiveItem(tempItem, false);
+                        newChar.TryGiveItem(tempItem, ItemHandling.Normal, false, false);
                     }
                 }
 
@@ -1233,7 +1233,7 @@ namespace Intersect.Server.Networking
                 return;
             }
 
-            player?.DropItems(packet.Slot, packet.Quantity);
+            player?.DropItemFrom(packet.Slot, packet.Quantity);
         }
 
         //UseItemPacket
@@ -1494,7 +1494,7 @@ namespace Intersect.Server.Networking
 
             var target = Player.FindOnline(packet.TargetId);
 
-            if (target != null && target.Id != player.Id && player.InRangeOf(target, Options.PartyInviteRange))
+            if (target != null && target.Id != player.Id && player.InRangeOf(target, Options.Party.InviteRange))
             {
                 target.InviteToParty(player);
 
