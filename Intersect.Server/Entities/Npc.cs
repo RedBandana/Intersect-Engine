@@ -792,7 +792,12 @@ namespace Intersect.Server.Entities
                                             mPathFinder.PathFailed(timeMs);
                                         }
                                     }
-
+                                    else
+                                    {
+                                        //Sometimes the pathfinder will not work (like if the target destination is one tile
+                                        //from the Npc. To solve this we have to have to reinstantiate the pathfinder.
+                                        mPathFinder = new Pathfinder(this);
+                                    }
                                     break;
                                 case PathfinderResult.OutOfRange:
                                     RemoveTarget();
@@ -864,7 +869,7 @@ namespace Intersect.Server.Entities
 
                             if (!fleed)
                             {
-                                if (Dir != DirToEnemy(Target) && DirToEnemy(Target) != -1)
+                                if (Dir != DirToEnemy(Target))
                                 {
                                     ChangeDir(DirToEnemy(Target));
                                 }
